@@ -1,26 +1,7 @@
 import React from 'react';
 import './Game.css';
-
-
-const CELL_SIZE = 20;
-const WIDTH = 120;
-const HEIGHT = 120;
-
-
-class Cell extends React.Component {
-
-    render() {
-        const { x, y } = this.props;
-        return (
-            <div className="Cell" style={{
-                left: `${CELL_SIZE * x + 1}px`,
-                top: `${CELL_SIZE * y + 1}px`,
-                width: `${CELL_SIZE - 1}px`,
-                height: `${CELL_SIZE - 1}px`,
-            }} />
-        );
-    }
-}
+import Cell from './Cell'
+import {CELL_SIZE, WIDTH, HEIGHT} from './Constants'
 
 
 class Game extends React.Component {
