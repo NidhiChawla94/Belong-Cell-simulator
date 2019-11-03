@@ -89,6 +89,7 @@ class Game extends React.Component {
 
         for (let y = 0; y < this.rows; y++) {
             for (let x = 0; x < this.cols; x++) {
+
                 let neighbors = this.calculateNeighbors(this.board, x, y);
                 if (this.board[y][x]) {
                     if (neighbors === 2 || neighbors === 3) {
@@ -122,6 +123,18 @@ class Game extends React.Component {
             let y1 = y + dir[0];
             let x1 = x + dir[1];
 
+            if(x1 == this.cols) {
+                x1 = 0;
+            } 
+            if(y1 == this.rows) {
+                y1 = 0;
+            }
+            if(x1 == -1) {
+                x1 = this.cols-1;
+            }
+            if(y1 == -1) {
+                y1 = this.rows-1;
+            }
             if (x1 >= 0 && x1 < this.cols && y1 >= 0 && y1 < this.rows && board[y1][x1]) {
                 neighbors++;
             }
