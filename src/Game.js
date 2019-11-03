@@ -87,19 +87,19 @@ class Game extends React.Component {
     runIteration() {
         let newBoard = this.makeEmptyBoard();
 
-        for (let y = 0; y < this.rows; y++) {
-            for (let x = 0; x < this.cols; x++) {
+        for (let row = 0; row < this.rows; row++) {
+            for (let col = 0; col < this.cols; col++) {
 
-                let neighbors = this.calculateNeighbors(this.board, x, y);
-                if (this.board[y][x]) {
-                    if (neighbors === 2 || neighbors === 3) {
-                        newBoard[y][x] = true;
+                let neighbours = this.calculateNeighbours(this.board, col, row);
+                if (this.board[row][col]) {
+                    if (neighbours === 2 || neighbours === 3) {
+                        newBoard[row][col] = true;
                     } else {
-                        newBoard[y][x] = false;
+                        newBoard[row][col] = false;
                     }
                 } else {
-                    if (!this.board[y][x] && neighbors === 3) {
-                        newBoard[y][x] = true;
+                    if (!this.board[row][col] && neighbours === 3) {
+                        newBoard[row][col] = true;
                     }
                 }
             }
@@ -110,13 +110,13 @@ class Game extends React.Component {
     }
 
     /**
-     * Calculate the number of neighbors at point (x, y)
+     * Calculate the number of neighbours at point (x, y)
      * @param {Array} board 
      * @param {int} x 
      * @param {int} y 
      */
-    calculateNeighbors(board, x, y) {
-        let neighbors = 0;
+    calculateNeighbours(board, x, y) {
+        let neighbours = 0;
         const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
         for (let i = 0; i < dirs.length; i++) {
             const dir = dirs[i];
@@ -136,11 +136,11 @@ class Game extends React.Component {
                 y1 = this.rows-1;
             }
             if (x1 >= 0 && x1 < this.cols && y1 >= 0 && y1 < this.rows && board[y1][x1]) {
-                neighbors++;
+                neighbours++;
             }
         }
 
-        return neighbors;
+        return neighbours;
     }
 
     handleClear = () => {
