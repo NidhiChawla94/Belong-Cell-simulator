@@ -16,16 +16,15 @@ class Game extends React.Component {
 
     state = {
         cells: [],
-        isRunning: false,
         interval: 100,
     }
 
     makeEmptyBoard() {
         let board = [];
-        for (let y = 0; y < this.rows; y++) {
-            board[y] = [];
-            for (let x = 0; x < this.cols; x++) {
-                board[y][x] = false;
+        for (let row = 0; row < this.rows; row++) {
+            board[row] = [];
+            for (let col = 0; col < this.cols; col++) {
+                board[row][col] = false;
             }
         }
 
@@ -71,20 +70,9 @@ class Game extends React.Component {
         this.setState({ cells: this.makeCells() });
     }
 
-    runGame = () => {
-        this.setState({ isRunning: true });
-        this.runIteration();
-    }
 
-    stopGame = () => {
-        this.setState({ isRunning: false });
-        if (this.timeoutHandler) {
-            window.clearTimeout(this.timeoutHandler);
-            this.timeoutHandler = null;
-        }
-    }
 
-    runIteration() {
+    nextGeneration=() => {
         let newBoard = this.makeEmptyBoard();
 
         for (let row = 0; row < this.rows; row++) {
@@ -110,32 +98,41 @@ class Game extends React.Component {
     }
 
     /**
-     * Calculate the number of neighbours at point (x, y)
+     * Calculate the number of live neighbours at point (row, col)
      * @param {Array} board 
-     * @param {int} x 
-     * @param {int} y 
+     * @param {int} col 
+     * @param {int} row 
      */
-    calculateNeighbours(board, x, y) {
-        let neighbours = 0;
-        const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
-        for (let i = 0; i < dirs.length; i++) {
-            const dir = dirs[i];
-            let y1 = y + dir[0];
-            let x1 = x + dir[1];
 
-            if(x1 == this.cols) {
-                x1 = 0;
+    calculateNeighbours(board, col, row) {
+        let neighbours = 0;
+        const neighbourOffsets = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
+        for (let index = 0; index < neighbourOffsets.length; index ++) {
+            const offset = neighbourOffsets[index];
+            let row1 = row + offset[0];
+            let col1 = col + offset[1];
+
+            /**
+             * The following code block makes sures of the req:
+             *   A Cell who "comes to life" outside the board should wrap at the other side of the board.
+             *  
+             * So, this code block considers the cell on the other side of the board as the current cell's neighbour
+             * i.e the first cell and last cell of a row are neighbours. and similarly, first and last cell of current column are neighbourrs.
+             * ** */
+            if(col1 == this.cols) {
+                col1 = 0;
             } 
-            if(y1 == this.rows) {
-                y1 = 0;
+            if(row1 == this.rows) {
+                row1 = 0;
             }
-            if(x1 == -1) {
-                x1 = this.cols-1;
+            if(col1 == -1) {
+                col1 = this.cols-1;
             }
-            if(y1 == -1) {
-                y1 = this.rows-1;
+            if(row1 == -1) {
+                row1 = this.rows-1;
             }
-            if (x1 >= 0 && x1 < this.cols && y1 >= 0 && y1 < this.rows && board[y1][x1]) {
+            //increase in number of live neighbours
+            if (col1 >= 0 && col1 < this.cols && row1 >= 0 && row1 < this.rows && board[row1][col1]) {
                 neighbours++;
             }
         }
@@ -143,13 +140,16 @@ class Game extends React.Component {
         return neighbours;
     }
 
+
+    
+
     handleClear = () => {
         this.board = this.makeEmptyBoard();
         this.setState({ cells: this.makeCells() });
     }
 
     render() {
-        const { cells, interval, isRunning } = this.state;
+        const { cells } = this.state;
         return (
             <div>
                 <div className="Board"
@@ -163,7 +163,7 @@ class Game extends React.Component {
                 </div>
 
                 <div className="controls">
-                    <button className="button" onClick={this.runGame}>Next Generation</button>
+                    <button className="button" onClick={this.nextGeneration}>Next Generation</button>
                     <button className="button" onClick={this.handleClear}>Clear</button>
                 </div>
             </div>
