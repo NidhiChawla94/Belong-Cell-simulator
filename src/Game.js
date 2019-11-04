@@ -29,7 +29,6 @@ class Game extends React.Component {
                 board[row][col] = false;
             }
         }
-        console.log("make empty board::", board)
         return board;
     }
 
@@ -55,7 +54,6 @@ class Game extends React.Component {
                 }
             }
         }
-        console.log("saveAliveCells::", cells)
         return cells;
     }
 
