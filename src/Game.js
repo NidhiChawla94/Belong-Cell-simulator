@@ -18,7 +18,9 @@ class Game extends React.Component {
         cells: [],
         interval: 100,
     }
-
+    /**
+     * Create an empty board 
+     * */ 
     makeEmptyBoard() {
         let board = [];
         for (let row = 0; row < this.rows; row++) {
@@ -27,7 +29,7 @@ class Game extends React.Component {
                 board[row][col] = false;
             }
         }
-
+        console.log("make empty board::", board)
         return board;
     }
 
@@ -41,7 +43,10 @@ class Game extends React.Component {
         };
     }
 
-    makeCells() {
+    /**
+     * Stores the alive cells.
+     * */
+    saveAliveCells() {
         let cells = [];
         for (let y = 0; y < this.rows; y++) {
             for (let x = 0; x < this.cols; x++) {
@@ -50,7 +55,7 @@ class Game extends React.Component {
                 }
             }
         }
-
+        console.log("saveAliveCells::", cells)
         return cells;
     }
 
@@ -67,34 +72,50 @@ class Game extends React.Component {
             this.board[y][x] = !this.board[y][x];
         }
 
-        this.setState({ cells: this.makeCells() });
+        this.setState({ cells: this.saveAliveCells() });
     }
 
 
+    /****
+     * 
+     * This function creates the next generation of the cells
+     * Step 1.  it  makes a new board with empty cells.
+     * Step 2. For each cell, it then finds the alive neighbours from existing board
+     * Step 3: Depending upon no. of neighbours from Step2 cells, the next state of cells is determined.
+     * 
+     * 
+     */
 
     nextGeneration=() => {
+        //Step1
         let newBoard = this.makeEmptyBoard();
 
         for (let row = 0; row < this.rows; row++) {
             for (let col = 0; col < this.cols; col++) {
-
+                //Step 2
                 let neighbours = this.calculateNeighbours(this.board, col, row);
+                //Step 3
+                //if current cell is alive 
                 if (this.board[row][col]) {
+                    //if the no. of neighbours of current cell is 2 or 3 then it lives in next generation.
                     if (neighbours === 2 || neighbours === 3) {
                         newBoard[row][col] = true;
                     } else {
+                        // the cell does not lives in next generation. it dies of under population or over population
                         newBoard[row][col] = false;
                     }
                 } else {
+                    // An empty Cell with exactly 3 live neighbours "comes to life".
                     if (!this.board[row][col] && neighbours === 3) {
                         newBoard[row][col] = true;
                     }
                 }
             }
         }
-
+        // the new board replaces the old board
         this.board = newBoard;
-        this.setState({ cells: this.makeCells() });
+        // change the board's state.
+        this.setState({ cells: this.saveAliveCells() });
     }
 
     /**
@@ -142,10 +163,10 @@ class Game extends React.Component {
 
 
     
-
+    // clear all the alive cells.
     handleClear = () => {
         this.board = this.makeEmptyBoard();
-        this.setState({ cells: this.makeCells() });
+        this.setState({ cells: this.saveAliveCells() });
     }
 
     render() {
