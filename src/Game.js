@@ -15,8 +15,7 @@ class Game extends React.Component {
     }
 
     state = {
-        cells: [],
-        interval: 100,
+        cells: []
     }
     /**
      * Create an empty board 

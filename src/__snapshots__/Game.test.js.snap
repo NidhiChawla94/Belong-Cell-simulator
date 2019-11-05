@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Link changes the class when hovered 1`] = `
+<div>
+  <div
+    className="Board"
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundSize": "20px 20px",
+        "height": 200,
+        "width": 400,
+      }
+    }
+  />
+  <div
+    className="controls"
+  >
+    <button
+      className="button"
+      onClick={[Function]}
+    >
+      Next Generation
+    </button>
+    <button
+      className="button"
+      onClick={[Function]}
+    >
+      Clear
+    </button>
+  </div>
+</div>
+`;
